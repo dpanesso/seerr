@@ -7,6 +7,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import { MediaServerType } from '@server/constants/server';
 import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
+import getConfig from 'next/config';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -37,6 +38,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
   const intl = useIntl();
   const settings = useSettings();
   const [loginError, setLoginError] = useState<string | null>(null);
+  const { publicRuntimeConfig } = getConfig();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required(
@@ -54,8 +56,8 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
   return (
     <Formik
       initialValues={{
-        email: '',
-        password: '',
+        email: publicRuntimeConfig.isDemo ? 'demo@seerr.dev' : '',
+        password: publicRuntimeConfig.isDemo ? 'test1234' : '',
       }}
       validationSchema={LoginSchema}
       validateOnBlur={false}

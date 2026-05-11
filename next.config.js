@@ -27,4 +27,7 @@ module.exports = {
     scrollRestoration: true,
     largePageDataBytes: 512 * 1000,
   },
+  publicRuntimeConfig: {
+    isDemo: process.env.DEMO_MODE === 'true',
+  },
 };

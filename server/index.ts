@@ -27,6 +27,7 @@ import imageproxy from '@server/routes/imageproxy';
 import { appDataPermissions } from '@server/utils/appDataVolume';
 import { getAppVersion } from '@server/utils/appVersion';
 import createCustomProxyAgent from '@server/utils/customProxyAgent';
+import { initDemoData } from '@server/utils/demoMode';
 import { initializeDnsCache } from '@server/utils/dnsCache';
 import restartFlag from '@server/utils/restartFlag';
 import { getClientIp } from '@supercharge/request-ip';
@@ -245,6 +246,13 @@ app
       };
       next();
     });
+
+    // Init demo mode and catch some API routes
+    if (process.env.DEMO_MODE === 'true') {
+      logger.info('Demo mode enabled, seeding database with demo data');
+      await initDemoData(server);
+    }
+
     server.use('/api/v1', routes);
 
     // Do not set cookies so CDNs can cache them
